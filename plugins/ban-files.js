@@ -4,7 +4,7 @@
 //   Removes same messages sent by user across one or multiple groups.
 
 'use strict';
-const Composer = require('telegraf/composer');
+const { Composer } = require('telegraf');
 
 const blacklisted_files = [ 'apk', 'exe', 'scr', 'bat', 'cmd', 'vbs', 'pif' ];
 
