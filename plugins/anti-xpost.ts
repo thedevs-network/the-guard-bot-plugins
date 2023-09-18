@@ -16,6 +16,12 @@ const strip = R.omit([
 	"media_group_id",
 ]);
 
+const getMessageType = (message) => {
+	var keys = Object.keys(message);
+	var messageType = keys.pop();
+	return messageType;
+};
+
 setInterval(() => messages.clear(), ms("1h"));
 
 export = (ctx: ExtendedContext, next: () => Promise<void>) => {
@@ -23,8 +29,8 @@ export = (ctx: ExtendedContext, next: () => Promise<void>) => {
 		ctx.from?.status === "admin" ||
 		ctx.updateType !== "message" ||
 		!ctx.chat?.type.endsWith("group") ||
-		(ctx.updateSubTypes[0]?.includes("_") &&
-			ctx.updateSubTypes[0] !== "video_note") ||
+		(getMessageType(ctx.message)?.includes("_") &&
+			getMessageType(ctx.message) !== "video_note") ||
 		ctx.message?.text?.length < 20
 	) {
 		return next();
