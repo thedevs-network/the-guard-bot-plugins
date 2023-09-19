@@ -1,6 +1,6 @@
 // Author: C0rn3j
 // Description:
-//   Searches for an article on ARch Wiki and links it
+//   Searches for an article on the Arch Wiki and links it
 //   Example: /wiki installation guide
 //   Result: Arch Wiki: Installation guide (https://wiki.archlinux.org/index.php?title=Installation%20guide)
 
