@@ -4,7 +4,7 @@
 
 /* eslint-disable require-atomic-updates */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import * as ms from "millisecond";
+import ms from "millisecond";
 import { ExtendedContext } from "../typings/context";
 const { fetch } = require('undici');
 
