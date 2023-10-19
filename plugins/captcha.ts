@@ -9,6 +9,7 @@ import type { ExtendedContext } from '../typings/context';
 import { logError } from '../utils/log';
 import { lrm } from '../utils/html';
 import { telegram } from '../bot';
+import { config } from "../utils/config"
 
 // Time to answer the math question, in seconds
 const TIME_TO_ANSWER = 60;
@@ -42,26 +43,26 @@ type Challenge = {
 
 const kickOutMember = (
 	challenges: Challenge[],
-	curerntChallenge: Challenge
+	currrentChallenge: Challenge
 ): number => {
 	return (setTimeout(() => {
 		// Delete from active challenges
-		const foundChallengeIndex = challenges.indexOf(curerntChallenge);
+		const foundChallengeIndex = challenges.indexOf(currrentChallenge);
 		if (foundChallengeIndex >= 0) {
 			challenges.splice(foundChallengeIndex, 1);
 		}
 
 		// Check if user is banned already
-		const user = getUser({ id: curerntChallenge.userId });
+		const user = getUser({ id: currrentChallenge.userId });
 
 		// For each group:
-		curerntChallenge.groups.forEach((group) => {
+		currrentChallenge.groups.forEach((group) => {
 			// Kick user
 			if (group.id && !user.banned) {
 				telegram
 					.kickChatMember(
 						group.id,
-						curerntChallenge.userId,
+						currrentChallenge.userId,
 						Date.now() / 1000 + BAN_DURATION
 					)
 					.catch(catchError);
@@ -84,6 +85,15 @@ const createMath = (): { answer: number; question: string } => {
 	do {
 		a = pick(numbers);
 		b = pick(numbers);
+
+		if (config.plugins?.captcha?.negativeSubstractionCase) {
+			// To avoid negative substraction case
+			if (b > a) {
+				const c = a
+				a = b
+				b = c
+			}
+		}
 		op = pick(Object.keys(calc)) as keyof typeof calc;
 		result = calc[op](a, b);
 	} while (result === 0);
