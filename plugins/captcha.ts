@@ -157,7 +157,7 @@ export = Composer.mount('message', async (ctx: ExtendedContext, next) => {
 			if (shouldIgnoreJoin) return;
 
 			// Get user and check if already is verified
-			const user = getUser({ id: member.id });
+			const user = await getUser({ id: member.id });
 			if (user.captcha) return;
 
 			// Check if already has shown
