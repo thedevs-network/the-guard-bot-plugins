@@ -2,7 +2,7 @@
 // Author: poeti8
 // Description:
 //   Adds a simple captcha to the bot to kick spam bots on join.
-//   Configure `config.pluginSettings.captcha.negativeResults: true` in bot config file to enable harder substraction case
+//   Configure `config.pluginSettings.captcha.negativeResults: true` in bot config file to enable harder subtraction case
 //     with negative results, disabled by default as it can confuse people that don't realize they have to write a - symbol
 
 import { getUser, verifyCaptcha } from '../stores/user';
@@ -90,7 +90,7 @@ const createMath = (): { answer: number; question: string } => {
 
 		// Default to executing the block
 		if (!config.pluginSettings?.captcha?.negativeResults) {
-			// To avoid negative substraction case
+			// To avoid negative subtraction case
 			if (b > a) {
 				const c = a
 				a = b
