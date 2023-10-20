@@ -88,7 +88,7 @@ const createMath = (): { answer: number; question: string } => {
 		a = pick(numbers);
 		b = pick(numbers);
 
-		// default to executing the block
+		// Default to executing the block
 		if (!config.pluginSettings?.captcha?.negativeResults) {
 			// To avoid negative substraction case
 			if (b > a) {
