@@ -3,7 +3,7 @@
 // Description:
 //   Adds a simple captcha to the bot to kick spam bots on join.
 //   Configure `config.pluginSettings.captcha.negativeResults: true` in bot config file to enable harder substraction case
-//     with negatives results, disabled by default as it can confuse people that don't realize they have to write a - symbol
+//     with negative results, disabled by default as it can confuse people that don't realize they have to write a - symbol
 
 import { getUser, verifyCaptcha } from '../stores/user';
 import { Composer } from 'telegraf';
