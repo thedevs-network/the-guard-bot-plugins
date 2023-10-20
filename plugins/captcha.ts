@@ -45,26 +45,26 @@ type Challenge = {
 
 const kickOutMember = (
 	challenges: Challenge[],
-	currrentChallenge: Challenge
+	currentChallenge: Challenge
 ): number => {
 	return (setTimeout(() => {
 		// Delete from active challenges
-		const foundChallengeIndex = challenges.indexOf(currrentChallenge);
+		const foundChallengeIndex = challenges.indexOf(currentChallenge);
 		if (foundChallengeIndex >= 0) {
 			challenges.splice(foundChallengeIndex, 1);
 		}
 
 		// Check if user is banned already
-		const user = getUser({ id: currrentChallenge.userId });
+		const user = getUser({ id: currentChallenge.userId });
 
 		// For each group:
-		currrentChallenge.groups.forEach((group) => {
+		currentChallenge.groups.forEach((group) => {
 			// Kick user
 			if (group.id && !user.banned) {
 				telegram
 					.kickChatMember(
 						group.id,
-						currrentChallenge.userId,
+						currentChallenge.userId,
 						Date.now() / 1000 + BAN_DURATION
 					)
 					.catch(catchError);
