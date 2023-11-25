@@ -1,25 +1,36 @@
 // Author: C0rn3j
 // Description:
-//   Searches for an article on the Arch Wiki and links it
-//   Example: /wiki installation guide
+//   Searches for an article on the Arch Wiki and links it by clicking the desired inline result
+//   Example: @botname installation guide
 //   Result: Arch Wiki: Installation guide (https://wiki.archlinux.org/index.php?title=Installation%20guide)
+//
+//   https://core.telegram.org/bots/api#inline-mode
+//   Make sure that /setinline is enabled in @BotFather for this plugin to
+
 
 'use strict'
+import { error } from "console";
+import { Telegraf, Markup } from "telegraf";
+import { InlineQueryResult } from "telegraf/types";
+
 const { Composer } = require('telegraf')
 const axios = require('axios')
 
 const BASE_URL = 'https://wiki.archlinux.org/'
 const API_URL = BASE_URL + 'api.php'
 
-module.exports = Composer.command('wiki', async (ctx) => {
-	const query = ctx.message.text.split('/wiki ')[1]
-	if (!query) {
-		const username = ctx.message.from.username || "Unknown user"
-		const userId = ctx.message.from.id
-		const sentMessage = await ctx.reply(`${username}[${userId}]: Please provide a keyword to search on Arch Wiki.`)
-		setTimeout(() => ctx.deleteMessage(sentMessage.message_id), 30000)
+const composer = new Composer();
+
+composer.on('inline_query', async (ctx) => {
+	const username = ctx.from.username || "Unknown user"
+	const userId = ctx.from.id
+	const query = ctx.inlineQuery.query
+	if (query == '') {
+//		console.log("Empty query")
 		return
 	}
+
+	//console.log(`${username}[${userId}]: Wiki query: ${query}`)
 
 	try {
 		const { data } = await axios.get(API_URL, {
@@ -27,6 +38,7 @@ module.exports = Composer.command('wiki', async (ctx) => {
 				action: 'query',
 				list: 'search',
 				srsearch: query,
+				srenablerewrites: true,
 				format: 'json'
 			}
 		})
@@ -34,31 +46,56 @@ module.exports = Composer.command('wiki', async (ctx) => {
 		const searchResults = data.query.search
 
 		if (!searchResults.length) {
-			const sentMessage = await ctx.reply('No relevant articles found on Arch Wiki.')
-			setTimeout(() => ctx.deleteMessage(sentMessage.message_id), 30000)
-			return
+//			console.log("No relevant articles found on Arch Wiki.")
+			let errorArray = []
+			const errorArrayObject = {
+				type: 'article',
+				id: 1,
+				title: 'ERROR',
+				description: `No relevant articles found on Arch Wiki for "${query}".`,
+				input_message_content: {
+						message_text: `<No results>`,
+				}
+			}
+			errorArray.push(errorArrayObject)
+			return await ctx.answerInlineQuery(errorArray)
 		}
 
-		// Construct a URL for the first search result
-		const pageTitle = searchResults[0].title
-		const pageURL = `${BASE_URL}index.php?title=${encodeURIComponent(pageTitle)}`
-		const hyperlinkMessage = `<a href="${pageURL}">Arch Wiki: ${pageTitle}</a>`
+//		console.log(searchResults)
 
-		// Check if it was a reply to someone else and act accordingly
-		if (ctx.message.reply_to_message) {
-			ctx.reply(hyperlinkMessage, {
-				reply_to_message_id: ctx.message.reply_to_message.message_id,
-				parse_mode: 'HTML'
-			})
-		} else {
-			ctx.reply(hyperlinkMessage, {
-				parse_mode: 'HTML'
-			})
-		}
+		const searchResults2 = searchResults.map(({ title, pageid }) => ({
+			type: 'article',
+			id: pageid,
+			title: title,
+			description: '',
+			input_message_content: {
+					message_text: `<a href="${BASE_URL}index.php?title=${encodeURIComponent(title)}">Arch Wiki: ${title}</a>`,
+					parse_mode: 'HTML',
+			}
+	}));
+		return await ctx.answerInlineQuery(searchResults2);
 
 	} catch (error) {
 		console.error(error)
-		const sentMessage = await ctx.reply('Error fetching data from Arch Wiki.')
-		setTimeout(() => ctx.deleteMessage(sentMessage.message_id), 30000)
+		let errorArray = []
+		const errorArrayObject = {
+			type: 'article',
+			id: 1,
+			title: 'ERROR',
+			description: `Error fetching data from Arch Wiki for "${query}".`,
+			input_message_content: {
+					message_text: `<No results>`,
+			}
+		}
+		errorArray.push(errorArrayObject)
+		return await ctx.answerInlineQuery(errorArray)
 	}
+
 })
+
+// Remember to /setinlinefeedback with @BotFather
+//composer.on('chosen_inline_result', ({ chosenInlineResult }) => {
+//	console.log("chosen inline result", chosenInlineResult);
+//});
+
+module.exports = composer;
