@@ -8,8 +8,8 @@
 import { Composer } from 'telegraf';
 
 module.exports = Composer.command('delete', (ctx, next) =>
-  ctx.from.status === 'admin'
-    ? ctx.message.reply_to_message
-      ? ctx.deleteMessage(ctx.message.reply_to_message.message_id)
-      : ctx.reply('Reply to a message to delete it')
-    : ctx.reply('Admin only'));
+	ctx.from.status === 'admin'
+		? ctx.message.reply_to_message
+			? ctx.deleteMessage(ctx.message.reply_to_message.message_id)
+			: ctx.reply('Reply to a message to delete it')
+		: ctx.reply('Admin only'));
