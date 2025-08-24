@@ -6,8 +6,7 @@
 import { Composer, Context } from "telegraf";
 import { message } from "telegraf/filters";
 import type { Message, User } from "telegraf/types";
-
-const config = require("../config.json") as { excludeLinks?: string[] | string | false };
+import { config } from "../utils/config";
 
 const excludeLinks = config.excludeLinks
 	? Array.isArray(config.excludeLinks)
