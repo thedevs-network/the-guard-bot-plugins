@@ -48,8 +48,8 @@ const getText = (ctx: Context) => {
 
 	ret += text.slice(next);
 
-	// ignore whitespace
-	return ret.replace(/\s/g, "");
+	// ignore whitespace and numbers
+	return ret.replace(/\s/g, "").replace(/\d/g, "");
 };
 
 const isNonAdmin = (ctx: TheGuardContext) => !ctx.state.isMaster && ctx.from?.status !== "admin";
