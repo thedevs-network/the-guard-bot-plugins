@@ -88,7 +88,12 @@ const inRange = (c: string, range: Range) => c >= range[0] && c <= range[1];
 const isOriental = (c: string) =>
 	CJK_RANGES.some(range => inRange(c, range)) || ARABIC_RANGES.some(range => inRange(c, range));
 
-const countOffendingCodepoints = (s: string) => s.split("").filter(isOriental).length + countEmojiCodepoints(s);
+const countOffendingCodepoints = (s: string) => {
+	const emoji = countEmojiCodepoints(s);
+	const oriental = s.split("").filter(isOriental).length;
+	if (oriental > 0) return emoji + oriental;
+	else return 0;
+};
 
 const ALWAYS_BAN_BELOW = 6;
 const SMOOTH_DECAY_FROM = 50;
