@@ -19,10 +19,10 @@ interface TheGuardContext extends Context {
 	from: From;
 }
 
-type LinkEntity = MessageEntity.TextLinkMessageEntity;
-const isLink = (entity: MessageEntity): entity is LinkEntity => entity.type === "url";
+const shouldStripEntity = (entity: MessageEntity) =>
+	entity.type === "url" || entity.type === "text_link" || entity.type === "mention" || entity.type === "text_mention";
 
-const getText = (ctx: TheGuardContext) => {
+const getText = (ctx: Context) => {
 	// prettier-ignore
 	const entities =
 		ctx.has(message("entities")) ? ctx.message.entities :
@@ -36,7 +36,7 @@ const getText = (ctx: TheGuardContext) => {
 	let ret = "";
 	let next = 0;
 
-	const links = entities.filter(isLink);
+	const links = entities.filter(shouldStripEntity);
 
 	for (let i = 0; i < links.length; i++) {
 		const link = links[i];
@@ -48,8 +48,8 @@ const getText = (ctx: TheGuardContext) => {
 
 	ret += text.slice(next);
 
-	// ignore whitespace
-	return ret.replace(/\s/g, "");
+	// ignore whitespace and numbers
+	return ret.replace(/\s/g, "").replace(/\d/g, "");
 };
 
 const isNonAdmin = (ctx: TheGuardContext) => !ctx.state.isMaster && ctx.from?.status !== "admin";
