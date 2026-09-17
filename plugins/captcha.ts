@@ -11,7 +11,7 @@ import type { ExtendedContext } from '../typings/context';
 import { logError } from '../utils/log';
 import { lrm } from '../utils/html';
 import { telegram } from '../bot';
-import { config } from "../utils/config"
+import { config, getNewChatMembers } from "../utils/config";
 
 // Time to answer the math question, in seconds
 const TIME_TO_ANSWER = 60;
@@ -115,7 +115,8 @@ export = Composer.mount('message', async (ctx: ExtendedContext, next) => {
 		return next();
 	}
 
-	const members = ctx.message?.new_chat_members?.filter(
+  const newChatMembers = getNewChatMembers && getNewChatMembers(ctx.message);
+	const members = newChatMembers?.filter(
 		(user) => user.username !== ctx.me
 	);
 
