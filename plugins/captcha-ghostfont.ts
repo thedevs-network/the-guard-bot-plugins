@@ -149,8 +149,8 @@ export = Composer.mount('message', async (ctx: ExtendedContext, next) => {
 				{ source: media.animation, filename: media.filename },
 				{
 					caption: `${lrm}<a href="tg://user?id=${member.id}">${name}</a> [<code>${member.id}</code>] ` +
-						'play the animation and type the text revealed by the moving dots ' +
-						`within ${TIME_TO_ANSWER} seconds. Include any leading zeros. ` +
+						'see the animation and type the text revealed by the moving dots ' +
+						`within ${TIME_TO_ANSWER} seconds. ` +
 						'Read our rules(!) right after.',
 					parse_mode: 'HTML',
 					disable_notification: true,
