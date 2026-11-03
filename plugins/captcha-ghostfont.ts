@@ -151,6 +151,7 @@ export = Composer.mount('message', async (ctx: ExtendedContext, next) => {
 					caption: `${lrm}<a href="tg://user?id=${member.id}">${name}</a> [<code>${member.id}</code>] ` +
 						'see the animation and type the text revealed by the moving dots ' +
 						`within ${TIME_TO_ANSWER} seconds. ` +
+						`If you are visually impaired, send /staff to this bot account, and contact a listed admin directly.` +
 						'Read our rules(!) right after.',
 					parse_mode: 'HTML',
 					disable_notification: true,
