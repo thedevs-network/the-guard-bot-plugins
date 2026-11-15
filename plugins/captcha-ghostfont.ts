@@ -16,9 +16,9 @@ import { createCaptcha } from './captcha-ghostfont/source';
 import type { CaptchaMedia } from './captcha-ghostfont/source';
 
 // Time to read and answer the visual challenge, in seconds
-const TIME_TO_ANSWER = 60;
+const TIME_TO_ANSWER = 120;
 
-// How long should the user stay banned, in seconds
+// How long should the user stay banned, in seconds - note that 30 or less is permaban
 const BAN_DURATION = 60;
 
 // How long after join the bot is allowed to show captcha, in seconds
@@ -53,7 +53,7 @@ const kickOutMember = (
 			// Kick user
 			if (group.id && !user.banned) {
 				telegram
-					.kickChatMember(
+					.banChatMember(
 						group.id,
 						currentChallenge.userId,
 						Date.now() / 1000 + BAN_DURATION
