@@ -62,7 +62,7 @@ const kickOutMember = (
 			// Kick user
 			if (group.id && !user.banned) {
 				telegram
-					.kickChatMember(
+					.banChatMember(
 						group.id,
 						currentChallenge.userId,
 						Date.now() / 1000 + BAN_DURATION
